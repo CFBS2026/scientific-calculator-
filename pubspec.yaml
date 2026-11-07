@@ -1,0 +1,4 @@
+dependencies:
+  flutter:
+    sdk: flutter
+  math_expressions: ^2.6.0
