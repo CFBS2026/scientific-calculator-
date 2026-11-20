@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MRP - Admin License Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card-border: #334155;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --primary: #3b82f6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --input-bg: #0f172a;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: 'Noto Sans Myanmar', 'Pyidaungsu', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* Compact App Header UI */
+  .app-header {
+    background: linear-gradient(135deg, #1e3a8a, #0f172a);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .header-top > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+  #topActionBtn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+
+  .app-header h1 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    line-height: 1.2;
+  }
+
+  .license-pill {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    font-weight: 700;
+    white-space: nowrap;
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid #f59e0b;
+  }
+
+  .app-header p {
+    margin: 2px 0 0;
+    font-size: 10px;
+    color: #93c5fd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Compact Tab Switcher */
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    background: rgba(15, 23, 42, 0.7);
+    padding: 3px;
+    border-radius: 8px;
+  }
+
+  .tab-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    padding: 6px 3px;
+    border-radius: 6px;
+    font-size: 10.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tab-btn.active {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 14px;
+    padding-bottom: 40px;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .summary-badges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .badge-box {
+    background: #0f172a;
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .badge-box .num {
+    font-size: 18px;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+
+  .badge-box .lbl {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #60a5fa;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  .key-output-box {
+    background: #0f172a;
+    border: 1px dashed #3b82f6;
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 10px;
+  }
+
+  .key-code-display {
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #34d399;
+    letter-spacing: 1px;
+    word-break: break-all;
+    margin: 4px 0 8px;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .btn-primary { background: var(--primary); }
+  .btn-success { background: var(--success); }
+  .btn-warning { background: #475569; }
+  .btn-amber { background: #d97706; }
+  .btn-danger { background: var(--danger); }
+  .btn-sm { padding: 5px 9px; font-size: 11px; }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .log-item {
+    background: #0f172a;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .log-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+
+  .log-key {
+    font-family: monospace;
+    font-size: 12px;
+    color: #34d399;
+  }
+
+  .log-meta {
+    font-size: 10.5px;
+    color: var(--muted);
+  }
+
+  .toast-msg {
+    font-size: 11.5px;
+    color: #34d399;
+    min-height: 18px;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <h1>
+        MRP
+        <span class="license-pill">ADMIN</span>
+      </h1>
+      <p>Monthly Report Pro လိုင်စင်ကုဒ် ထုတ်ပေးသည့်စနစ်</p>
+    </div>
+    <button class="btn btn-warning btn-sm" id="topActionBtn" onclick="clearGenerator()">ရှင်းမည်</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-tab-gen" onclick="switchTab('gen')">🔑 Key ထုတ်ရန်</button>
+    <button class="tab-btn" id="btn-tab-history" onclick="switchTab('history')">📋 မှတ်တမ်း</button>
+    <button class="tab-btn" id="btn-tab-backup" onclick="switchTab('backup')">💾 Backup</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="summary-badges">
+    <div class="badge-box">
+      <div class="num" id="stat-total-keys">0</div>
+      <div class="lbl">ထုတ်ပေးပြီး Key</div>
+    </div>
+    <div class="badge-box">
+      <div class="num" id="stat-today-keys">0</div>
+      <div class="lbl">ယနေ့ ထုတ်ပြီး</div>
+    </div>
+    <div class="badge-box">
+      <div class="num" id="stat-status">READY</div>
+      <div class="lbl">စနစ်အခြေအနေ</div>
+    </div>
+  </div>
+
+  <!-- TAB 1: KEY GENERATOR -->
+  <div id="tab-gen" class="tab-content active">
+    <div class="card">
+      <div class="card-title">၁။ ဝယ်ယူသူ အချက်အလက်ဖြင့် Key ထုတ်ခြင်း</div>
+      <div class="form-group">
+        <label>ဝယ်ယူသူ အမည် / ကျောင်းအမည် (Registered Name)</label>
+        <input type="text" id="adminGenName" placeholder="Customer App ထဲတွင် ထည့်မည့် အမည်အတိုင်း ရိုက်ပါ" oninput="updateLiveKey()">
+      </div>
+      <div class="form-group">
+        <label>မှတ်ချက် / ဖုန်းနံပါတ် / မြို့နယ် (Optional)</label>
+        <input type="text" id="adminGenNote" placeholder="ဥပမာ - ဘုတလင် / 09xxxxxxxxx">
+      </div>
+
+      <div class="key-output-box">
+        <div style="font-size:11.5px; color:#94a3b8;">ထွက်လာသော License Key (MRP-XXXX-XXXX)</div>
+        <div class="key-code-display" id="adminGenKeyDisplay">MRP-0000-0000</div>
+        <div class="btn-row">
+          <button class="btn btn-success btn-sm" onclick="copyCurrentKey()">📋 Key ကူးမည်</button>
+          <button class="btn btn-primary btn-sm" onclick="saveKeyToHistory()">💾 မှတ်တမ်းသိမ်းမည်</button>
+          <button class="btn btn-amber btn-sm" onclick="copyCustomerMessage()">✉️ ဝယ်ယူသူထံ ပို့ရန်စာ ကူးမည်</button>
+        </div>
+        <div class="toast-msg" id="genToast"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">၂။ ဝယ်ယူသူထံ ပို့ပေးရမည့် အချက်အလက် Preview</div>
+      <textarea id="customerSharePreview" rows="6" readonly></textarea>
+    </div>
+  </div>
+
+  <!-- TAB 2: HISTORY LOG -->
+  <div id="tab-history" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span>ထုတ်ပေးထားသော License မှတ်တမ်းများ</span>
+        <button class="btn btn-danger btn-sm" onclick="clearHistory()">အားလုံး ဖျက်မည်</button>
+      </div>
+      <div class="form-group">
+        <input type="text" id="historySearch" placeholder="အမည် သို့မဟုတ် Key ဖြင့် ရှာဖွေရန်..." oninput="renderHistory()">
+      </div>
+      <div id="historyList"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: BACKUP & RESTORE -->
+  <div id="tab-backup" class="tab-content">
+    <div class="card">
+      <div class="card-title">Admin License မှတ်တမ်း Backup / Restore</div>
+      <p style="font-size:12px; color:#94a3b8; margin-top:0;">
+        ထုတ်ပေးထားသော ဝယ်ယူသူစာရင်းများ မပျောက်ပျက်စေရန် JSON ဖိုင်ဖြင့် သိမ်းဆည်းထားနိုင်ပါသည်။
+      </p>
+      <div class="btn-row">
+        <button class="btn btn-warning" onclick="exportAdminHistory()">📤 JSON Backup ထုတ်မည်</button>
+        <label class="btn btn-primary" style="cursor:pointer;">
+          📥 JSON Backup ပြန်သွင်းမည်
+          <input type="file" accept=".json" style="display:none;" onchange="importAdminHistory(event)">
+        </label>
+      </div>
+      <div class="toast-msg" id="backupToast"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = "MRP_ADMIN_KEY_HISTORY_V1";
+  let currentTab = "gen";
+
+  function computeLicenseKey(name) {
+    const clean = (name || "").trim().toLowerCase();
+    if (!clean) return "MRP-0000-0000";
+    let h1 = 0x811c9dc5;
+    let h2 = 0x1b873593;
+    for (let i = 0; i < clean.length; i++) {
+      const c = clean.charCodeAt(i);
+      h1 ^= c;
+      h1 = Math.imul(h1, 0x01000193);
+      h2 ^= (c * 31);
+      h2 = Math.imul(h2, 0x85ebca6b);
+    }
+    const p1 = (h1 >>> 0).toString(16).toUpperCase().padStart(8, '0').slice(0, 4);
+    const p2 = (h2 >>> 0).toString(16).toUpperCase().padStart(8, '0').slice(0, 4);
+    return `MRP-${p1}-${p2}`;
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    ["gen", "history", "backup"].forEach(t => {
+      document.getElementById(`tab-${t}`).classList.toggle("active", t === tab);
+      document.getElementById(`btn-tab-${t}`).classList.toggle("active", t === tab);
+    });
+    const topBtn = document.getElementById("topActionBtn");
+    topBtn.style.display = (tab === "gen") ? "inline-flex" : "none";
+    if (tab === "history") renderHistory();
+  }
+
+  function updateLiveKey() {
+    const name = document.getElementById("adminGenName").value;
+    const note = document.getElementById("adminGenNote").value.trim();
+    const key = computeLicenseKey(name);
+    document.getElementById("adminGenKeyDisplay").innerText = key;
+
+    const cleanName = name.trim() || "(ဝယ်ယူသူအမည် ထည့်ပါ)";
+    const preview =
+`Monthly Report Pro (Full License)
+--------------------------
+Registered Name : ${cleanName}
+License Key     : ${key}${note ? `\nNote            : ${note}` : ""}
+
+App ထဲရှိ ဆက်တင် (Settings) > လိုင်စင် အတည်ပြုခြင်း တွင် အထက်ပါ အမည်နှင့် Key ကို ရိုက်ထည့်၍ အတည်ပြုနိုင်ပါသည်။`;
+    document.getElementById("customerSharePreview").value = preview;
+  }
+
+  function clearGenerator() {
+    document.getElementById("adminGenName").value = "";
+    document.getElementById("adminGenNote").value = "";
+    document.getElementById("genToast").innerText = "";
+    updateLiveKey();
+  }
+
+  function copyTextToClipboard(text, toastId, msg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        document.getElementById(toastId).innerText = msg;
+      }).catch(() => {
+        fallbackCopy(text, toastId, msg);
+      });
+    } else {
+      fallbackCopy(text, toastId, msg);
+    }
+  }
+
+  function fallbackCopy(text, toastId, msg) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    document.getElementById(toastId).innerText = msg;
+  }
+
+  function copyCurrentKey() {
+    const name = document.getElementById("adminGenName").value.trim();
+    if (!name) {
+      document.getElementById("genToast").innerText = "⚠️ အမည်အရင် ထည့်သွင်းပါ။";
+      return;
+    }
+    const key = computeLicenseKey(name);
+    copyTextToClipboard(key, "genToast", `✅ Key (${key}) ကို ကူးယူပြီးပါပြီ။`);
+  }
+
+  function copyCustomerMessage() {
+    const name = document.getElementById("adminGenName").value.trim();
+    if (!name) {
+      document.getElementById("genToast").innerText = "⚠️ အမည်အရင် ထည့်သွင်းပါ။";
+      return;
+    }
+    const msg = document.getElementById("customerSharePreview").value;
+    copyTextToClipboard(msg, "genToast", "✅ ဝယ်ယူသူထံ ပို့ရန် စာသားကို ကူးယူပြီးပါပြီ။");
+  }
+
+  function getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHistory(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    updateStats();
+  }
+
+  function saveKeyToHistory() {
+    const name = document.getElementById("adminGenName").value.trim();
+    const note = document.getElementById("adminGenNote").value.trim();
+    if (!name) {
+      document.getElementById("genToast").innerText = "⚠️ မှတ်တမ်းသိမ်းရန် ဝယ်ယူသူ အမည်ထည့်ပါ။";
+      return;
+    }
+    const key = computeLicenseKey(name);
+    const now = new Date();
+    const isoDate = now.toISOString().slice(0, 10);
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const list = getHistory();
+    list.unshift({
+      id: Date.now(),
+      name,
+      key,
+      note,
+      date: isoDate,
+      time: timeStr
+    });
+    saveHistory(list);
+    document.getElementById("genToast").innerText = `💾 ${name} (${key}) ကို မှတ်တမ်းထဲ သိမ်းဆည်းပြီးပါပြီ။`;
+  }
+
+  function deleteHistoryItem(id) {
+    if (!confirm("ဤမှတ်တမ်းကို ဖျက်မည်လား?")) return;
+    const list = getHistory().filter(item => item.id !== id);
+    saveHistory(list);
+    renderHistory();
+  }
+
+  function clearHistory() {
+    if (!confirm("ထုတ်ပေးထားသော License မှတ်တမ်းအားလုံးကို ဖျက်မည်လား?")) return;
+    saveHistory([]);
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const q = (document.getElementById("historySearch").value || "").trim().toLowerCase();
+    const list = getHistory().filter(item =>
+      item.name.toLowerCase().includes(q) ||
+      item.key.toLowerCase().includes(q) ||
+      (item.note || "").toLowerCase().includes(q)
+    );
+
+    const container = document.getElementById("historyList");
+    if (list.length === 0) {
+      container.innerHTML = `<div style="font-size:12px; color:#94a3b8; text-align:center; padding:16px;">မှတ်တမ်း မရှိသေးပါ။</div>`;
+      return;
+    }
+
+    container.innerHTML = list.map(item => `
+      <div class="log-item">
+        <div style="min-width:0; flex:1;">
+          <div class="log-name">${escapeHtml(item.name)}</div>
+          <div class="log-key">${escapeHtml(item.key)}</div>
+          <div class="log-meta">${escapeHtml(item.date)} ${escapeHtml(item.time || "")}${item.note ? " • " + escapeHtml(item.note) : ""}</div>
+        </div>
+        <div style="display:flex; gap:6px; flex-shrink:0;">
+          <button class="btn btn-success btn-sm" onclick="quickReuse('${escapeAttr(item.name)}', '${escapeAttr(item.note || "")}')">သုံးမည်</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteHistoryItem(${item.id})">ဖျက်</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function quickReuse(name, note) {
+    document.getElementById("adminGenName").value = name;
+    document.getElementById("adminGenNote").value = note;
+    updateLiveKey();
+    switchTab("gen");
+  }
+
+  function updateStats() {
+    const list = getHistory();
+    const today = new Date().toISOString().slice(0, 10);
+    const todayCount = list.filter(x => x.date === today).length;
+    document.getElementById("stat-total-keys").innerText = list.length;
+    document.getElementById("stat-today-keys").innerText = todayCount;
+  }
+
+  function exportAdminHistory() {
+    const raw = JSON.stringify(getHistory(), null, 2);
+    const blob = new Blob([raw], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `MRP_Admin_Keys_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    document.getElementById("backupToast").innerText = "✅ Backup JSON ဖိုင် ထုတ်ပြီးပါပြီ။";
+  }
+
+  function importAdminHistory(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (!Array.isArray(parsed)) throw new Error("Invalid");
+        saveHistory(parsed);
+        renderHistory();
+        document.getElementById("backupToast").innerText = "✅ Backup မှတ်တမ်း ပြန်သွင်းပြီးပါပြီ။";
+      } catch (err) {
+        document.getElementById("backupToast").innerText = "⚠️ ဖိုင်ပုံစံ မှားယွင်းနေပါသည်။";
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(str) {
+    return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+  }
+
+  window.onload = () => {
+    updateLiveKey();
+    updateStats();
+    renderHistory();
+  };
+</script>
+</body>
+</html>
